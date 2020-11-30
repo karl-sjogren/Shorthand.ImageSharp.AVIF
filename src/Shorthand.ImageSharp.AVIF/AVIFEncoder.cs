@@ -19,11 +19,15 @@ namespace Shorthand.ImageSharp.AVIF {
         public bool Lossless { get; set; }
 
         public void Encode<TPixel>(Image<TPixel> image, Stream stream) where TPixel : unmanaged, IPixel<TPixel> {
+            var tempPath = Path.GetTempPath();
             var randomId = Guid.NewGuid();
-            var processArguments = $"{randomId}.png {randomId}.avif";
+            var randomIdPath = Path.Combine(tempPath, randomId.ToString());
+
+            var processArguments = $"{randomIdPath}.png {randomIdPath}.avif";
+
 
             if(Lossless) {
-                processArguments = $"--lossless {randomId}.png {randomId}.avif";
+                processArguments = $"--lossless {randomIdPath}.png {randomIdPath}.avif";
             }
 
             var psi = new ProcessStartInfo {
@@ -34,29 +38,32 @@ namespace Shorthand.ImageSharp.AVIF {
             };
 
             try {
-                image.SaveAsPng($"{randomId}.png");
+                image.SaveAsPng($"{randomIdPath}.png");
 
                 var process = Process.Start(psi);
                 process.WaitForExit((Int32)TimeSpan.FromSeconds(20).TotalMilliseconds);
 
-                using(var fs = File.OpenRead($"{randomId}.avif")) {
+                using(var fs = File.OpenRead($"{randomIdPath}.avif")) {
                     fs.CopyTo(stream);
                 }
             } finally {
-                if(File.Exists($"{randomId}.png"))
-                    File.Delete($"{randomId}.png");
+                if(File.Exists($"{randomIdPath}.png"))
+                    File.Delete($"{randomIdPath}.png");
 
-                if(File.Exists($"{randomId}.avif"))
-                    File.Delete($"{randomId}.avif");
+                if(File.Exists($"{randomIdPath}.avif"))
+                    File.Delete($"{randomIdPath}.avif");
             }
         }
 
         public async Task EncodeAsync<TPixel>(Image<TPixel> image, Stream stream, CancellationToken cancellationToken) where TPixel : unmanaged, IPixel<TPixel> {
+            var tempPath = Path.GetTempPath();
             var randomId = Guid.NewGuid();
-            var processArguments = $"{randomId}.png {randomId}.avif";
+            var randomIdPath = Path.Combine(tempPath, randomId.ToString());
+
+            var processArguments = $"{randomIdPath}.png {randomIdPath}.avif";
 
             if(Lossless) {
-                processArguments = $"--lossless {randomId}.png {randomId}.avif";
+                processArguments = $"--lossless {randomIdPath}.png {randomIdPath}.avif";
             }
 
             var psi = new ProcessStartInfo {
@@ -67,20 +74,20 @@ namespace Shorthand.ImageSharp.AVIF {
             };
 
             try {
-                image.SaveAsPng($"{randomId}.png");
+                image.SaveAsPng($"{randomIdPath}.png");
 
                 var process = Process.Start(psi);
                 process.WaitForExit((Int32)TimeSpan.FromSeconds(20).TotalMilliseconds);
 
-                using(var fs = File.OpenRead($"{randomId}.avif")) {
-                    await fs.CopyToAsync(stream);
+                using(var fs = File.OpenRead($"{randomIdPath}.avif")) {
+                    await fs.CopyToAsync(stream).ConfigureAwait(false);
                 }
             } finally {
-                if(File.Exists($"{randomId}.png"))
-                    File.Delete($"{randomId}.png");
-                    
-                if(File.Exists($"{randomId}.avif"))
-                    File.Delete($"{randomId}.avif");
+                if(File.Exists($"{randomIdPath}.png"))
+                    File.Delete($"{randomIdPath}.png");
+
+                if(File.Exists($"{randomIdPath}.avif"))
+                    File.Delete($"{randomIdPath}.avif");
             }
         }
     }
