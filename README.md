@@ -1,4 +1,4 @@
-# Shorthand.ImageSharp.AVIF [![Build Status](https://dev.azure.com/karl-sjogren/Shorthand.ImageSharp.AVIF/_apis/build/status/karl-sjogren.Shorthand.ImageSharp.AVIF?branchName=master)](https://dev.azure.com/karl-sjogren/Shorthand.ImageSharp.AVIF/_build/latest?definitionId=4&branchName=master)
+# Shorthand.ImageSharp.AVIF [![Build Status](https://dev.azure.com/karl-sjogren/Shorthand.ImageSharp.AVIF/_apis/build/status/karl-sjogren.Shorthand.ImageSharp.AVIF?branchName=develop)](https://dev.azure.com/karl-sjogren/Shorthand.ImageSharp.AVIF/_build/latest?definitionId=4&branchName=master)
 
 Adds a AVIF format for ImageSharp by calling out to the native executables. Future work includes calling out to the native libraries instead.
 
